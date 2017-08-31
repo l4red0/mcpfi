@@ -1,10 +1,10 @@
 <?php
 	/*
 		Plugin Name: Merchant center product feed importer
-		Plugin URI: #
+		Plugin URI: https://github.com/l4red0/mcpfi/
 		Description: Fetch and display product cards from Google Merchant Center XML feed on your wordpress site.
 		Author: Leszek Sołtys
-		Author URI: #
+		Author URI: http://soltys.biz
 		Version: 1.0
 		Text Domain: mcpfi
 		Domain Path: ./languages
