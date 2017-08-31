@@ -1,0 +1,85 @@
+.mcpfiProductImg {
+	height: 120px;
+	margin-left: 5px;
+	margin-right: 5px;
+	width: auto;
+}
+.mcpfiProductBig img {
+	max-height: 115px;
+}
+.mcpfiProduct {
+	border-radius: 2px;
+	width: 40vw;
+	height: auto;
+	text-align: center;
+	float: left;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	color: #006799;
+	margin: 8px;
+}
+.mcpfiPrTitle {
+	margin: 4px;
+	display: block;
+	font-size: calc(12px + 1vw);
+	font-weight: 600;
+	line-height: .9em;
+	background: rgba(255,255,255, .5);
+}
+.mcpfiPrTitle .prTitle{
+	overflow: visible;
+	display: block;
+	height: 6vh;
+	padding: 8px;
+	position: relative;
+	z-index:10;
+}
+.mcpfiImageContainer {
+	z-index:9;
+	position: relative;		
+}
+.mcpfiPrice sup{
+	color: #b3edff;
+	font-weight: 400;
+}
+
+#previewdiv {
+	height: 300px;
+	padding: 10px;
+	background: #dcdcdc;
+	width: fit-content;
+	min-width: 266px;
+}
+.mcpfiLink, .mcpfiLink:hover {
+	text-decoration: none;
+}
+
+.mcpfiprev, .mcpfiprev h5 {
+	font-size: 14px !important;
+}
+
+.mcpfiProductLogo {
+	position: absolute;
+	width: 25px;
+	height: auto;
+	fill: red;
+}
+.mpddDevice {
+	justify-content: space-between;
+	display: flex;
+	flex-flow: row wrap;
+}
+.mpddDevice p {
+	display: none;
+}
+.mcpfiPrice{
+	display: block;
+	width: 100%;
+	font-size: 4vw;
+	color: #fff;
+	padding-top: 10px;
+	padding-bottom: 8px;
+	font-weight: 700;
+	margin-top: 8px;
+}
