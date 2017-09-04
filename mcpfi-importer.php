@@ -56,26 +56,40 @@
 	function mcpfi_get_xml($url, $max_age)
 	{
 		if(isset($url) && $url != ""){
+		
 		$file = MCPFI_PLUGIN_DIR."xmlcache/". md5($url) .'cached.xml';
 			if (!file_exists($file) || filemtime($file) < time() - $max_age)
 			{
-				copy($url, $file);
+				if(copy($url, $file)) {
 				update_option( "mcpfiItemId", NULL);
 				update_option( "mcpfiItemCat", NULL);
+			} else { 
+			echo "<div class='error notice'>";
+			echo "<h2>Error while copying remote file</h2>";
+			echo "<p>Please check if feed url exist.</p></div>";
+			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
+			update_option( "mcpfiFeedUrl", plugins_url( 'xmlcache/sample.xml' , __FILE__ ));
+				}
+			} else {
+			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
 			}
+		
 		}
-		else {$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';}
+		else {
+			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
+			}
 		return $file;
 	}
 
+	//echo plugins_url( 'xmlcache/sample.xml' , __FILE__ );
 	
 	
 	//Get feed title
 	function mcpfi_feed_title() {
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
-		$mcpfiSingleProduct = $xml->children()->channel->title;
+		$mcpfiFeedTitle = $xml->children()->channel->title;
 		
-		return $mcpfiSingleProduct;
+		return $mcpfiFeedTitle;
 	}
 
 	//Get feed file age (last sync)
@@ -114,30 +128,38 @@
 	//Get array of products
 	function mcpfi_get_product_list() {
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
-		
-		foreach($xml->children()->channel->item as $products) { 	
+		$i = 0;
+		foreach($xml->children()->channel->item as $products) {
 			
 			$mcpfiProductList[] = array(
-			'prId' => (string)$products->children('g', true)->id, 
-			'prCat' => (string)$products->children('g', true)->product_type,
-			'prTitle' => (string)$products->title,
 			'prLink' => (string)$products->link,
-			'prImage' => (string)$products->children('g', true)->image_link,
-			'prGtin' => (string)$products->children('g', true)->gtin,
-			'prPrice' => (string)$products->children('g', true)->price,
-			'prSalePrice' => (string)$products->children('g', true)->sale_price,
-			'prInStock' => (string)$products->children('g', true)->availability,
+			//'prTitle' => (string)$products->title,
 			);
+			$mcpfiProductList[$i]['prId'] = (string)$products->children('g', true)->id;
+			$mcpfiProductList[$i]['prCat'] = (string)$products->children('g', true)->product_type;
+			$mcpfiProductList[$i]['prImage'] = (string)$products->children('g', true)->image_link;
+			$mcpfiProductList[$i]['prGtin'] = (string)$products->children('g', true)->gtin;
+			$mcpfiProductList[$i]['prPrice'] = (string)$products->children('g', true)->price;
+			$mcpfiProductList[$i]['prSalePrice'] = (string)$products->children('g', true)->sale_price;
+			$mcpfiProductList[$i]['prInStock'] = (string)$products->children('g', true)->availability;
+			
+			if(isset($products->title)) {
+				$mcpfiProductList[$i]['prTitle'] = (string)$products->title;
+				} else {
+				$mcpfiProductList[$i]['prTitle'] = (string)$products->children('g', true)->title;
+				}
+			$i++;
 		}
-		return$mcpfiProductList;
+		return $mcpfiProductList;	
 	}
-	
+	//print_r(mcpfi_get_product_list());
+
 	//Get array of product categories
 	function mcpfi_get_category_list() {
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
 		
-		foreach($xml->children()->channel->item as $products) { 	
-			$mcpfiCategoryList[] = (string)$products->children('g', true)->product_type;		
+		foreach($xml->children()->channel->item as $products) {
+			$mcpfiCategoryList[] = (string)$products->children('g', true)->product_type;
 		}
 		return array_unique($mcpfiCategoryList);
 	}

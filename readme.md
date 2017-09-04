@@ -1,11 +1,4 @@
 # Merchant Center product feed importer
-* Contributors: lsoltys
-* Tags: XML, Product feed, Google Merchant Center, Google Shopping, e-commerce, RSS
-* Requires at least: 4.1
-* Tested up to: 4.8.1
-* Stable tag: 1.0
-* License: GPLv3
-* License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 **Wordpress plugin to fetch and display products from your e-commerce Google Merchant Center XML feed on any wordpress site.**
 
@@ -36,10 +29,13 @@ Your feed is copied locally to your plugin directory. With "cache lifespan" you 
 
 Plugin uses `<g:id>` parameter from feed to generate product specific shortcode. Changing feed url will also change database for products IDs therefore break shortcodes.
 
+##### What kind of product feed this plugin is compatible?
+The easiest way to check if your feed is compatible with this plugin is to look for this line in your xml: `<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">` If exist, feed should be compatible.
+
 ## Screenshots
 
 
 ## Changelog
 
-* 0.1.0
+* 1.0
 Initial release
