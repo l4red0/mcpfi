@@ -80,11 +80,11 @@
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
 		if (false === $xml) {
 			$mcpfiFeedTitle = NULL;
+			update_option( "mcpfiFeedUrl", NULL);
 			if(is_admin()) {
 				echo "<div class='error notice'><h2>Error while reading XML</h2><p>Please validate your feed.</p></div>";
 				foreach(libxml_get_errors() as $error) {
-					echo "\t", $error->message;
-					update_option( "mcpfiFeedUrl", NULL);
+					echo "<div class='error notice'>".$error->message."</div>";
 				}
 			}
 			} else {
@@ -145,7 +145,6 @@
 			
 			$mcpfiProductList[] = array(
 			'prLink' => (string)$products->link,
-			//'prTitle' => (string)$products->title,
 			);
 			$mcpfiProductList[$i]['prId'] = (string)$products->children('g', true)->id;
 			$mcpfiProductList[$i]['prCat'] = (string)$products->children('g', true)->product_type;
@@ -154,16 +153,13 @@
 			$mcpfiProductList[$i]['prPrice'] = (string)$products->children('g', true)->price;
 			$mcpfiProductList[$i]['prSalePrice'] = (string)$products->children('g', true)->sale_price;
 			$mcpfiProductList[$i]['prInStock'] = (string)$products->children('g', true)->availability;
-			
-			if(isset($products->title)) {
-				$mcpfiProductList[$i]['prTitle'] = (string)$products->title;
-				} else {
-				$mcpfiProductList[$i]['prTitle'] = (string)$products->children('g', true)->title;
-			}
-			$i++;
+			$mcpfiProductList[$i]['prTitle'] = (string)$products->title;
+
+			$i++;;
 		}
 		return $mcpfiProductList;	
 	}
+	//print_r(mcpfi_get_product_list());
 	
 	//Get array of product categories
 	function mcpfi_get_category_list() {
