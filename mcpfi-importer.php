@@ -13,6 +13,7 @@
 	
 	if (!defined( 'ABSPATH' ) ) exit;
 	define('MCPFI_PLUGIN_DIR',plugin_dir_path(__FILE__)); //Get plugin path
+	libxml_use_internal_errors(true);
 	
 	add_action('admin_menu', 'mcpfi_admin_menu');
 	
@@ -64,9 +65,7 @@
 					update_option( "mcpfiItemCat", NULL);
 					} else { //Feed URL is broken - display message on admin page 
 					if(is_admin()) {
-						echo "<div class='error notice'>";
-						echo "<h2>Error while copying remote file</h2>";
-						echo "<p>Please check if feed url exist.</p></div>";
+						echo "<div class='error notice'><h2>Error while copying remote file</h2><p>Please check if feed url exist.</p></div>";
 					}
 					$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
 				}
@@ -78,10 +77,31 @@
 	
 	//Get feed title
 	function mcpfi_feed_title() {
-		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
-		$mcpfiFeedTitle = $xml->children()->channel->title;
+		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
+		if (false === $xml) {
+			$mcpfiFeedTitle = NULL;
+			if(is_admin()) {
+				echo "<div class='error notice'><h2>Error while reading XML</h2><p>Please validate your feed.</p></div>";
+				foreach(libxml_get_errors() as $error) {
+					echo "\t", $error->message;
+					update_option( "mcpfiFeedUrl", NULL);
+				}
+			}
+			} else {
+			$mcpfiFeedTitle = $xml->children()->channel->title;
+		}
+		libxml_clear_errors();
 		
 		return $mcpfiFeedTitle;
+	}
+	
+	//Color picker
+	add_action( 'admin_enqueue_scripts', 'wptuts_add_color_picker' );
+	function wptuts_add_color_picker( $hook ) {
+		if( is_admin() ) {    
+			wp_enqueue_style( 'wp-color-picker' ); 
+			wp_enqueue_script( array( 'wp-color-picker' ), false, true ); 
+		}
 	}
 	
 	//Get feed file age (last sync)
@@ -95,7 +115,7 @@
 	
 	//Get product by id
 	function mcpfi_get_product($productId=NULL) {
-		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
+		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
 		
 		if(!isset($productId)) {$productId = get_option('mcpfiItemId');} else {$mcpfiSingleProduct = NULL;}
 		foreach($xml->children()->channel->item as $product) { 
@@ -119,7 +139,7 @@
 	
 	//Get array of products
 	function mcpfi_get_product_list() {
-		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
+		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
 		$i = 0;
 		foreach($xml->children()->channel->item as $products) {
 			
@@ -147,7 +167,7 @@
 	
 	//Get array of product categories
 	function mcpfi_get_category_list() {
-		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
+		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
 		
 		foreach($xml->children()->channel->item as $products) {
 			$mcpfiCategoryList[] = (string)$products->children('g', true)->product_type;
@@ -180,15 +200,6 @@
 	function mcpfi_m2s($minutes) {
 		$seconds = $minutes*60;
 		return $seconds;
-	}
-	
-	//Color picker
-	add_action( 'admin_enqueue_scripts', 'wptuts_add_color_picker' );
-	function wptuts_add_color_picker( $hook ) {
-		if( is_admin() ) {    
-			wp_enqueue_style( 'wp-color-picker' ); 
-			wp_enqueue_script( array( 'wp-color-picker' ), false, true ); 
-		}
 	}
 	
 	//Shortcode for product
