@@ -83,3 +83,7 @@
 	font-weight: 700;
 	margin-top: 8px;
 }
+.utmInputLabel {
+    width: 120px;
+    display: inline-block;
+}
