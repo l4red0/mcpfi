@@ -56,25 +56,23 @@
 	function mcpfi_get_xml($url, $max_age)
 	{
 		if(isset($url) && $url != ""){
-			
 			$file = MCPFI_PLUGIN_DIR."xmlcache/". md5($url) .'cached.xml';
-			
 			if (!file_exists($file) || filemtime($file) < time() - $max_age)
 			{
-				if(copy($url, $file)) {
+				if(@copy($url, $file)) {
 					update_option( "mcpfiItemId", NULL);
 					update_option( "mcpfiItemCat", NULL);
-					} else { 
-					echo "<div class='error notice'>";
-					echo "<h2>Error while copying remote file</h2>";
-					echo "<p>Please check if feed url exist.</p></div>";
+					} else { //Feed URL is broken - display message on admin page 
+					if(is_admin()) {
+						echo "<div class='error notice'>";
+						echo "<h2>Error while copying remote file</h2>";
+						echo "<p>Please check if feed url exist.</p></div>";
+					}
 					$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
 				}
 			} else {  }
 		}
-		else {
-			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
-		}
+		else { $file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml'; }
 		return $file;
 	}	
 	
@@ -99,7 +97,7 @@
 	function mcpfi_get_product($productId=NULL) {
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
 		
-		if(!isset($productId)) {$productId = get_option('mcpfiItemId');} else {}
+		if(!isset($productId)) {$productId = get_option('mcpfiItemId');} else {$mcpfiSingleProduct = NULL;}
 		foreach($xml->children()->channel->item as $product) { 
 			if ($product->children('g', true)->id == $productId) {
 				$mcpfiSingleProduct['prId'] = $product->children('g', true)->id; 
@@ -146,7 +144,6 @@
 		}
 		return $mcpfiProductList;	
 	}
-	//print_r(mcpfi_get_product_list());
 	
 	//Get array of product categories
 	function mcpfi_get_category_list() {
