@@ -30,7 +30,7 @@ Your feed is copied locally to your plugin directory. With "cache lifespan" you 
 Plugin uses `<g:id>` parameter from feed to generate product specific shortcode. Changing feed url will also change database for products IDs therefore break shortcodes.
 
 ##### What kind of product feed this plugin is compatible?
-The easiest way to check if your feed is compatible with this plugin is to look for this line in your xml: `<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">` If exist, feed should be compatible.
+Feed must be RSS 2.0 and meet requirements described [here](https://support.google.com/merchants/answer/160589?hl=en). The easiest way to check if your feed is compatible with this plugin is to look for this line in your xml: `<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">` If exist, feed should be compatible.
 
 ## Screenshots
 
