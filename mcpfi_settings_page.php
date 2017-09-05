@@ -33,7 +33,7 @@
 	}	
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
-	$mcpfiItemId = get_option('mcpfiItemId');	
+	$mcpfiItemId = get_option('mcpfiItemId');
 ?>
 
 <script type="text/javascript">
@@ -108,12 +108,10 @@
 	<h1><?php _e("Merchant Center product feed importer", "mcpfi"); ?></h1>
 	<h2><?php _e("Settings", "mcpfi"); ?></h2>
 	<hr />
-	<?php 	?>
 	<form method="post" action="">
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e("Feed url", "mcpfi"); ?></th>
-				
 				<td>
 					<strong><?php _e("Feed title:", "mcpfi"); ?></strong> <?php echo mcpfi_feed_title();?><br />
 					<input type="text" name="mcpfiFeedUrl" id="mcpfiFeedUrl" size="80" value="<?php echo get_option( 'mcpfiFeedUrl' ); ?>"/><br />
@@ -160,9 +158,10 @@
 			<!--UTM-->
 			<tr valign="top">
 				<th scope="row"><?php _e("UTM (Campaign URL settings)", "mcpfi"); ?></th>
-				<td><?php _e("UTM source:", "mcpfi"); ?> <input type="text" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>"/><br/>
-					<?php _e("UTM medium:", "mcpfi"); ?> <input type="text" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>"/><br/>
-					<?php _e("UTM campagin:", "mcpfi"); ?> <input type="text" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>"/><br />
+				
+				<td><hr /><span class="utmInputLabel"><?php _e("UTM source:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>"/><br/>
+					<span class="utmInputLabel"><?php _e("UTM medium:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>"/><br/>
+					<span class="utmInputLabel"><?php _e("UTM campagin:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>"/><br />
 					<label for="mcpfiUTMsource"><small><?php _e("Note: UTM term and content are set automatically.", "mcpfi"); ?></small></label>
 				</td></tr>
 		</table>
