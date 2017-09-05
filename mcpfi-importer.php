@@ -17,7 +17,7 @@
 	add_action('admin_menu', 'mcpfi_admin_menu');
 	
 	$mcpfiHomeUrl = esc_url( home_url( '/' ) );
-
+	
 	//Wordpress internal options table
 	add_option( "mcpfiFeedUrl", "", "", 'yes' );
 	add_option( "mcpfiItemId", "", "", 'yes' );
@@ -43,8 +43,8 @@
 	
 	//Attach style
 	function mcpfi_style(){
-    wp_register_style('mcpfi-styles', plugins_url( 'mcpfi-style.css' , __FILE__ )); 
-    wp_enqueue_style('mcpfi-styles');
+		wp_register_style('mcpfi-styles', plugins_url( 'mcpfi-style.css' , __FILE__ )); 
+		wp_enqueue_style('mcpfi-styles');
 	}
 	
 	//Create backend menu link
@@ -56,33 +56,27 @@
 	function mcpfi_get_xml($url, $max_age)
 	{
 		if(isset($url) && $url != ""){
-		
-		$file = MCPFI_PLUGIN_DIR."xmlcache/". md5($url) .'cached.xml';
+			
+			$file = MCPFI_PLUGIN_DIR."xmlcache/". md5($url) .'cached.xml';
+			
 			if (!file_exists($file) || filemtime($file) < time() - $max_age)
 			{
 				if(copy($url, $file)) {
-				update_option( "mcpfiItemId", NULL);
-				update_option( "mcpfiItemCat", NULL);
-			} else { 
-			echo "<div class='error notice'>";
-			echo "<h2>Error while copying remote file</h2>";
-			echo "<p>Please check if feed url exist.</p></div>";
-			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
-			update_option( "mcpfiFeedUrl", plugins_url( 'xmlcache/sample.xml' , __FILE__ ));
+					update_option( "mcpfiItemId", NULL);
+					update_option( "mcpfiItemCat", NULL);
+					} else { 
+					echo "<div class='error notice'>";
+					echo "<h2>Error while copying remote file</h2>";
+					echo "<p>Please check if feed url exist.</p></div>";
+					$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
 				}
-			} else {
-			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
-			}
-		
+			} else {  }
 		}
 		else {
 			$file = MCPFI_PLUGIN_DIR.'xmlcache/sample.xml';
-			}
+		}
 		return $file;
-	}
-
-	//echo plugins_url( 'xmlcache/sample.xml' , __FILE__ );
-	
+	}	
 	
 	//Get feed title
 	function mcpfi_feed_title() {
@@ -91,7 +85,7 @@
 		
 		return $mcpfiFeedTitle;
 	}
-
+	
 	//Get feed file age (last sync)
 	function mcpfi_feed_age() {
 		$mcpfiFileAge = mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'));
@@ -147,13 +141,13 @@
 				$mcpfiProductList[$i]['prTitle'] = (string)$products->title;
 				} else {
 				$mcpfiProductList[$i]['prTitle'] = (string)$products->children('g', true)->title;
-				}
+			}
 			$i++;
 		}
 		return $mcpfiProductList;	
 	}
 	//print_r(mcpfi_get_product_list());
-
+	
 	//Get array of product categories
 	function mcpfi_get_category_list() {
 		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive'))) or die("Error: Cannot create object");
@@ -215,18 +209,18 @@
 		}
 		
 		if (isset($mcpfiTagData)) {
-		return <<<HTML
-		<a href="{$mcpfiTagData['prLink'][0]}?utm_source={$mcpfiUTMsource}&utm_medium={$mcpfiUTMmedium}&utm_campaign={$mcpfiUTMcampagin}&utm_term={$mcpfiTagData['prCat'][0]}&utm_content={$mcpfiTagData['prTitle'][0]}" title="{$mcpfiTagData['prTitle'][0]}" class="mcpfiLink">
-		<div class="mcpfiProduct">
-		<div class="mcpfiPrTitle">
-		<span class="prTitle">{$mcpfiTagData['prTitle'][0]}</span>
-		</div>
-		<div class="mcpfiImageContainer">
-		<img src="{$mcpfiTagData['prImage'][0]}" class="mcpfiProductImg" alt="{$mcpfiTagData['prTitle'][0]}" />
-		</div>
-		<span class="mcpfiPrice">{$mcpfi_salePrice}</span>
-		</div>
-		</a>
+			return <<<HTML
+			<a href="{$mcpfiTagData['prLink'][0]}?utm_source={$mcpfiUTMsource}&utm_medium={$mcpfiUTMmedium}&utm_campaign={$mcpfiUTMcampagin}&utm_term={$mcpfiTagData['prCat'][0]}&utm_content={$mcpfiTagData['prTitle'][0]}" title="{$mcpfiTagData['prTitle'][0]}" class="mcpfiLink">
+			<div class="mcpfiProduct">
+			<div class="mcpfiPrTitle">
+			<span class="prTitle">{$mcpfiTagData['prTitle'][0]}</span>
+			</div>
+			<div class="mcpfiImageContainer">
+			<img src="{$mcpfiTagData['prImage'][0]}" class="mcpfiProductImg" alt="{$mcpfiTagData['prTitle'][0]}" />
+			</div>
+			<span class="mcpfiPrice">{$mcpfi_salePrice}</span>
+			</div>
+			</a>
 HTML;
 		} else {return null;}
 	}
