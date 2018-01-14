@@ -3,7 +3,7 @@ Contributors: lsoltys
 Tags: XML, Product feed, Google Merchant Center, Google Shopping, e-commerce, RSS
 Requires at least: 4.1
 Tested up to: 4.8.1
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,3 +43,10 @@ Plugin uses <g:id> parameter from feed to generate product specific shortcode. C
 
 = 0.1.0 =
 *Initial release
+
+= 0.1.1 =
+* Added: option for changing image height
+* Added: better product id handling
+* Fixed: removed global styles in favor to inline
+* Fixed: some CSS rendering issues
+* Fixed: better html markup for product boxes

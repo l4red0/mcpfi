@@ -39,3 +39,10 @@ Feed must be RSS 2.0 and meet requirements described [here](https://support.goog
 
 * 1.0
 Initial release
+
+* 1.1
+- Added: option for changing image height
+- Added: better product id handling
+- Fixed: removed global styles in favor to inline
+- Fixed: some CSS rendering issues
+- Fixed: better html markup for product boxes

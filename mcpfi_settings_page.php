@@ -30,11 +30,16 @@
 	}
 	if( isset( $_POST['mcpfiColor1'] ) ) {
 		update_option( "mcpfiColor1", $_POST['mcpfiColor1'] );
-	}	
+	}
+	if( isset( $_POST['mcpfiImgHeight'] ) ) {
+		update_option( "mcpfiImgHeight", $_POST['mcpfiImgHeight'] );
+	}
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
 	$mcpfiItemId = get_option('mcpfiItemId');
-?>
+	
+ ?>
+
 
 <script type="text/javascript">
 	(function($) {
@@ -52,7 +57,8 @@
 				console.log($(this).val());
 			    var valueid = $( this ).val();
 				
-				$.ajax({ url: '',
+				$.ajax({ url: ajaxurl,
+					async: true,
 					data: {categorysel: valueid},
 					type: 'post',
 					success: function(output) {
@@ -72,7 +78,8 @@
 			    var valueid = $( this ).val();
 				$( ".accessoryId" ).val(valueid);
 				
-				$.ajax({ url: '',
+				$.ajax({ url: ajaxurl,
+					async: true,
 					data: {product: valueid},
 					type: 'post',
 					success: function(output) {
@@ -102,7 +109,7 @@
 	}
 	
 </script>
-<style type="text/css"></style>
+
 
 <div class="wrap">
 	<h1><?php _e("Merchant Center product feed importer", "mcpfi"); ?></h1>
@@ -126,7 +133,11 @@
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e("Price background color", "mcpfi"); ?></th>
-				<td><input type="text" class="mcpfiColor1 color-field" name="mcpfiColor1" value="<?php echo get_option('mcpfiColor1'); ?>"/><hr /></td>
+				<td><input type="text" class="mcpfiColor1 color-field" name="mcpfiColor1" value="<?php echo get_option('mcpfiColor1'); ?>"/></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e("Image height", "mcpfi"); ?></th>
+				<td><input type="text" class="mcpfiImgHeight" name="mcpfiImgHeight" value="<?php echo get_option('mcpfiImgHeight'); ?>"/><hr /></td>
 			</tr>
 			
 			<tr valign="top">

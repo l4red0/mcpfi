@@ -1,5 +1,4 @@
 .mcpfiProductImg {
-	height: 120px;
 	margin-left: 5px;
 	margin-right: 5px;
 	width: auto;
@@ -9,7 +8,6 @@
 }
 .mcpfiProduct {
 	border-radius: 2px;
-	width: 40vw;
 	height: auto;
 	text-align: center;
 	float: left;
@@ -22,7 +20,7 @@
 .mcpfiPrTitle {
 	margin: 4px;
 	display: block;
-	font-size: calc(12px + 1vw);
+	font-size: 1em;
 	font-weight: 600;
 	line-height: .9em;
 	background: rgba(255,255,255, .5);
@@ -30,7 +28,7 @@
 .mcpfiPrTitle .prTitle{
 	overflow: visible;
 	display: block;
-	height: 6vh;
+	height: auto;
 	padding: 8px;
 	position: relative;
 	z-index:10;
@@ -39,10 +37,6 @@
 	z-index:9;
 	position: relative;		
 }
-.mcpfiPrice sup{
-	color: #b3edff;
-	font-weight: 400;
-}
 
 #previewdiv {
 	height: 300px;
@@ -50,6 +44,9 @@
 	background: #dcdcdc;
 	width: fit-content;
 	min-width: 266px;
+}
+a.mcpfiLink{
+	display: block;
 }
 .mcpfiLink, .mcpfiLink:hover {
 	text-decoration: none;
@@ -76,12 +73,15 @@
 .mcpfiPrice{
 	display: block;
 	width: 100%;
-	font-size: 4vw;
 	color: #fff;
-	padding-top: 10px;
-	padding-bottom: 8px;
+	padding: .5em;
 	font-weight: 700;
 	margin-top: 8px;
+}
+
+.mcpfiPrice sup{
+	color: #b3edff;
+	font-weight: 400;
 }
 .utmInputLabel {
     width: 120px;
