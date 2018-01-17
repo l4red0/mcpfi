@@ -4,41 +4,40 @@
 	}
 	
 	if( isset( $_POST['mcpfiFeedUrl'] ) ) {
-		update_option( "mcpfiFeedUrl", $_POST['mcpfiFeedUrl'] );
+		update_option( "mcpfiFeedUrl", esc_url($_POST['mcpfiFeedUrl']));
 		$mcpfiFeedUrl = get_option( 'mcpfiFeedUrl' );
 	}
 	if( isset( $_POST['mcpfiItemId'] ) ) {
-		update_option( "mcpfiItemId", $_POST['mcpfiItemId'] );
-		
+		update_option( "mcpfiItemId", sanitize_text_field($_POST['mcpfiItemId']));
 	}
 	
 	if( isset( $_POST['mcpfiItemCat'] ) ) {
-		update_option( "mcpfiItemCat", $_POST['mcpfiItemCat'] );
+		update_option( "mcpfiItemCat", sanitize_text_field($_POST['mcpfiItemCat']));
 	}
 	if( isset( $_POST['mcpfiCacheLive'] ) ) {
-		update_option( "mcpfiCacheLive", mcpfi_m2s($_POST['mcpfiCacheLive'] ));
+		update_option( "mcpfiCacheLive", mcpfi_m2s(intval($_POST['mcpfiCacheLive'] )));
 	}
 	//UTM
 	if( isset( $_POST['mcpfiUTMsource'] ) ) {
-		update_option( "mcpfiUTMsource", $_POST['mcpfiUTMsource'] );
+		update_option( "mcpfiUTMsource", sanitize_text_field($_POST['mcpfiUTMsource']));
 	}
 	if( isset( $_POST['mcpfiUTMmedium'] ) ) {
-		update_option( "mcpfiUTMmedium", $_POST['mcpfiUTMmedium'] );
+		update_option( "mcpfiUTMmedium", sanitize_text_field($_POST['mcpfiUTMmedium']));
 	}
 	if( isset( $_POST['mcpfiUTMcampagin'] ) ) {
-		update_option( "mcpfiUTMcampagin", $_POST['mcpfiUTMcampagin'] );
+		update_option( "mcpfiUTMcampagin", sanitize_text_field($_POST['mcpfiUTMcampagin']));
 	}
 	if( isset( $_POST['mcpfiColor1'] ) ) {
 		update_option( "mcpfiColor1", $_POST['mcpfiColor1'] );
 	}
 	if( isset( $_POST['mcpfiImgHeight'] ) ) {
-		update_option( "mcpfiImgHeight", $_POST['mcpfiImgHeight'] );
+		update_option( "mcpfiImgHeight", intval($_POST['mcpfiImgHeight']));
 	}
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
 	$mcpfiItemId = get_option('mcpfiItemId');
 	
- ?>
+?>
 
 
 <script type="text/javascript">
@@ -128,18 +127,29 @@
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e("Cache lifespan", "mcpfi"); ?></th>
-				<td><input type="text" class="mcpfiCacheLive" name="mcpfiCacheLive" value="<?php echo mcpfi_s2m(get_option('mcpfiCacheLive')); ?>"/>  <?php _e("minutes", "mcpfi"); ?><p>
+				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiCacheLive" name="mcpfiCacheLive" value="<?php echo mcpfi_s2m(get_option('mcpfiCacheLive')); ?>"/>  <?php _e("minutes", "mcpfi"); ?><p>
 				<small><?php _e("Last synced", "mcpfi"); ?> <?php echo mcpfi_feed_age(); ?> ago</small></p></td>
+			</tr>
+			<tr>	
+				<td colspan="2">
+					<h4><?php _e("Product card display settings", "mcpfi"); ?></h4>
+					<hr />
+				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e("Price background color", "mcpfi"); ?></th>
 				<td><input type="text" class="mcpfiColor1 color-field" name="mcpfiColor1" value="<?php echo get_option('mcpfiColor1'); ?>"/></td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e("Image height", "mcpfi"); ?></th>
-				<td><input type="text" class="mcpfiImgHeight" name="mcpfiImgHeight" value="<?php echo get_option('mcpfiImgHeight'); ?>"/><hr /></td>
+				<th scope="row"><?php _e("Image height", "mcpfi"); //Image height input ?></th>
+				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiImgHeight" name="mcpfiImgHeight" value="<?php echo get_option('mcpfiImgHeight'); ?>" /></td>
 			</tr>
-			
+			<tr>	
+				<td colspan="2">
+					<h4><?php _e("Product selection", "mcpfi"); ?></h4>
+					<hr />
+				</td>
+			</tr>			
 			<tr valign="top">
 				<th scope="row"><?php _e("Category list", "mcpfi"); ?></th>
 				<td>
@@ -164,17 +174,32 @@
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e("Preview and shortcode", "mcpfi"); ?></th>
-				<td><hr /><div id="previewdiv"></div></td>
+				<td><div id="previewdiv"></div></td>
 			</tr>
 			<!--UTM-->
+			<tr>	
+				<td colspan="2">
+					<h4><?php _e("UTM (Campaign URL settings)", "mcpfi"); ?></h4>
+					<hr />
+				</td>
+			</tr>
+			<!--UTM source-->
 			<tr valign="top">
-				<th scope="row"><?php _e("UTM (Campaign URL settings)", "mcpfi"); ?></th>
-				
-				<td><hr /><span class="utmInputLabel"><?php _e("UTM source:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>"/><br/>
-					<span class="utmInputLabel"><?php _e("UTM medium:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>"/><br/>
-					<span class="utmInputLabel"><?php _e("UTM campagin:", "mcpfi"); ?></span> <input type="text" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>"/><br />
-					<label for="mcpfiUTMsource"><small><?php _e("Note: UTM term and content are set automatically.", "mcpfi"); ?></small></label>
-				</td></tr>
+				<th scope="row"><?php _e("UTM source:", "mcpfi"); ?></th>
+				<td><input type="text" style="width: 210px" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>"/></td>
+			</tr>
+			<!--UTM medium-->
+			<tr valign="top">
+				<th scope="row"><?php _e("UTM medium:", "mcpfi"); ?></th>
+				<td><input type="text" style="width: 210px" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>"/></td>
+			</tr>
+			<!--UTM campagin-->
+			<tr valign="top">
+				<th scope="row"><?php _e("UTM campagin:", "mcpfi"); ?></th>
+				<td><input type="text" style="width: 210px" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>"/><br />
+					<label for="mcpfiUTMsource"><small><?php _e("Note: UTM term and content are set automatically.", "mcpfi"); ?></small></label>	
+				</td>
+			</tr>
 		</table>
 		<?php submit_button(); ?>
 	</form>
