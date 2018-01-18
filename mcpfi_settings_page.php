@@ -2,6 +2,13 @@
 	if(!defined( 'ABSPATH' )) { exit();	}
 	if(!current_user_can( 'manage_options' )) { exit();	}
 	
+	//validate form nonce
+	if(isset($_POST['submit'])){
+		if(!check_admin_referer( 'mcpfi_nonce_submit','mcpfi_nonce')){
+		 exit();
+		}
+	}
+	
 	if( isset( $_POST['mcpfiFeedUrl'] ) ) {
 		update_option( "mcpfiFeedUrl", esc_url($_POST['mcpfiFeedUrl']));
 		$mcpfiFeedUrl = get_option( 'mcpfiFeedUrl' );
@@ -39,6 +46,8 @@
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
 	$mcpfiItemId = get_option('mcpfiItemId');
+	
+	
 	
 ?>
 
@@ -118,6 +127,7 @@
 	<h2><?php _e("Settings", "mcpfi"); ?></h2>
 	<hr />
 	<form method="post" action="">
+	<?php wp_nonce_field('mcpfi_nonce_submit', 'mcpfi_nonce'); ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e("Feed url", "mcpfi"); ?></th>
