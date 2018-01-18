@@ -1,7 +1,6 @@
 <?php
-	if( ! current_user_can( 'manage_options' ) ) {
-		exit();
-	}
+	if(!defined( 'ABSPATH' )) { exit();	}
+	if(!current_user_can( 'manage_options' )) { exit();	}
 	
 	if( isset( $_POST['mcpfiFeedUrl'] ) ) {
 		update_option( "mcpfiFeedUrl", esc_url($_POST['mcpfiFeedUrl']));
@@ -28,11 +27,15 @@
 		update_option( "mcpfiUTMcampagin", sanitize_text_field($_POST['mcpfiUTMcampagin']));
 	}
 	if( isset( $_POST['mcpfiColor1'] ) ) {
-		update_option( "mcpfiColor1", $_POST['mcpfiColor1'] );
+		update_option( "mcpfiColor1", sanitize_hex_color($_POST['mcpfiColor1']));
 	}
 	if( isset( $_POST['mcpfiImgHeight'] ) ) {
 		update_option( "mcpfiImgHeight", intval($_POST['mcpfiImgHeight']));
 	}
+	if( isset( $_POST['mcpfiImgWidth'] ) ) {
+		update_option( "mcpfiImgWidth", intval($_POST['mcpfiImgWidth']));
+	}
+	
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
 	$mcpfiItemId = get_option('mcpfiItemId');
@@ -143,6 +146,10 @@
 			<tr valign="top">
 				<th scope="row"><?php _e("Image height", "mcpfi"); //Image height input ?></th>
 				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiImgHeight" name="mcpfiImgHeight" value="<?php echo get_option('mcpfiImgHeight'); ?>" /></td>
+			</tr>
+			<tr valign="top">
+			<th scope="row"><?php _e("Product card width", "mcpfi"); //Image height input ?></th>
+				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiImgWidth" name="mcpfiImgWidth" value="<?php echo get_option('mcpfiImgWidth'); ?>" /></td>
 			</tr>
 			<tr>	
 				<td colspan="2">
