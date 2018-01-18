@@ -5,7 +5,7 @@
 	//validate form nonce
 	if(isset($_POST['submit'])){
 		if(!check_admin_referer( 'mcpfi_nonce_submit','mcpfi_nonce')){
-		 exit();
+			exit();
 		}
 	}
 	
@@ -46,8 +46,6 @@
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
 	$mcpfiItemId = get_option('mcpfiItemId');
-	
-	
 	
 ?>
 
@@ -127,13 +125,13 @@
 	<h2><?php _e("Settings", "mcpfi"); ?></h2>
 	<hr />
 	<form method="post" action="">
-	<?php wp_nonce_field('mcpfi_nonce_submit', 'mcpfi_nonce'); ?>
+		<?php wp_nonce_field('mcpfi_nonce_submit', 'mcpfi_nonce'); ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e("Feed url", "mcpfi"); ?></th>
 				<td>
 					<strong><?php _e("Feed title:", "mcpfi"); ?></strong> <?php echo mcpfi_feed_title();?><br />
-					<input type="text" name="mcpfiFeedUrl" id="mcpfiFeedUrl" size="80" value="<?php echo get_option( 'mcpfiFeedUrl' ); ?>"/><br />
+					<input type="text" name="mcpfiFeedUrl" id="mcpfiFeedUrl" size="80" value="<?php echo esc_url(get_option('mcpfiFeedUrl')); ?>"/><br />
 					<label for="mcpfiFeedUrl"><small><?php _e("Warning! Changing main feed URL will probably break existing shortcodes in frontend.", "mcpfi"); ?></small></label>
 				</td>
 				<td></td>
@@ -158,7 +156,7 @@
 				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiImgHeight" name="mcpfiImgHeight" value="<?php echo get_option('mcpfiImgHeight'); ?>" /></td>
 			</tr>
 			<tr valign="top">
-			<th scope="row"><?php _e("Product card width", "mcpfi"); //Image height input ?></th>
+				<th scope="row"><?php _e("Product card width", "mcpfi"); //Image height input ?></th>
 				<td><input type="number" min="0" step="1" style="width: 80px;" class="mcpfiImgWidth" name="mcpfiImgWidth" value="<?php echo get_option('mcpfiImgWidth'); ?>" /></td>
 			</tr>
 			<tr>	
