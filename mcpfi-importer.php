@@ -11,9 +11,9 @@
 		License: GPLv3
 	*/
 	
-	if (!defined( 'ABSPATH' ) ) exit;
+	if(!defined( 'ABSPATH' )) { exit();	}
 	define('MCPFI_PLUGIN_DIR',plugin_dir_path(__FILE__)); //Get plugin path
-	libxml_use_internal_errors(true);
+	libxml_use_internal_errors(false); //True, for xml debugging
 	
 	add_action('admin_menu', 'mcpfi_admin_menu');
 	
@@ -29,6 +29,7 @@
 	add_option( "mcpfiUTMcampagin", "mcpfi", "", 'yes' );
 	add_option( "mcpfiColor1", "#00a0d2", "", 'yes' );
 	add_option( "mcpfiImgHeight", "130", "", 'yes' );
+	add_option( "mcpfiImgWidth", "150", "", 'yes' );
 	
 
 	add_action( 'wp_enqueue_scripts', 'mcpfi_style' );
@@ -110,28 +111,29 @@
 	
 	//Get product by id
 	function mcpfi_get_product($productId=NULL) {
-		$xml=simplexml_load_file(mcpfi_get_xml((get_option( 'mcpfiFeedUrl' )), get_option('mcpfiCacheLive')));
+		$xml=simplexml_load_file(mcpfi_get_xml((get_option('mcpfiFeedUrl')), get_option('mcpfiCacheLive')));
 		
 		if(!isset($productId)) {$productId = get_option('mcpfiItemId');} else {$mcpfiSingleProduct = NULL;}
 		foreach($xml->children()->channel->item as $product) {
 		
 		(isset($product->children('g', true)->id) ? $prIDcase = 'id' : $prIDcase = 'ID');
 		
-		
+			//$product .= esc_attr($product);
 			if ($product->children('g', true)->$prIDcase == $productId) {
-				$mcpfiSingleProduct['prId'] = $product->children('g', true)->$prIDcase; 
-				$mcpfiSingleProduct['prTitle'] = $product->title; 
-				$mcpfiSingleProduct['prCat'] = $product->children('g', true)->product_type; 
-				$mcpfiSingleProduct['prLink'] = $product->link; 
-				$mcpfiSingleProduct['prImage'] = $product->children('g', true)->image_link; 
-				$mcpfiSingleProduct['prDescription'] = $product->description; 
-				$mcpfiSingleProduct['prGtin'] = $product->children('g', true)->gtin; 
-				$mcpfiSingleProduct['prPrice'] = $product->children('g', true)->price;
-				$mcpfiSingleProduct['prSalePrice'] = $product->children('g', true)->sale_price;
-				$mcpfiSingleProduct['prInStock'] = $product->children('g', true)->availability; 
-				$mcpfiSingleProduct['prCondition'] = $product->children('g', true)->condition;
-				$mcpfiSingleProduct['prDate'] = date("y-m-d");
+				$mcpfiSingleProduct['prId'] = esc_attr($product->children('g', true)->$prIDcase->__toString()); 
+				$mcpfiSingleProduct['prTitle'] = esc_attr($product->title->__toString());
+				$mcpfiSingleProduct['prCat'] = esc_html($product->children('g', true)->product_type->__toString()); 
+				$mcpfiSingleProduct['prLink'] = esc_url($product->link->__toString()); 
+				$mcpfiSingleProduct['prImage'] = esc_url($product->children('g', true)->image_link->__toString()); 
+				$mcpfiSingleProduct['prDescription'] = esc_html($product->description->__toString()); 
+				$mcpfiSingleProduct['prGtin'] = esc_attr($product->children('g', true)->gtin->__toString()); 
+				$mcpfiSingleProduct['prPrice'] = esc_attr($product->children('g', true)->price->__toString());
+				$mcpfiSingleProduct['prSalePrice'] = esc_attr($product->children('g', true)->sale_price->__toString());
+				$mcpfiSingleProduct['prInStock'] = esc_attr($product->children('g', true)->availability->__toString()); 
+				$mcpfiSingleProduct['prCondition'] = esc_attr($product->children('g', true)->condition->__toString());
+				$mcpfiSingleProduct['prDate'] = esc_attr(date("y-m-d"));
 			}
+			
 		} 
 		return $mcpfiSingleProduct;
 	}
@@ -146,14 +148,14 @@
 			
 			$mcpfiProductList[] = array('prLink' => (string)$products->link,);
 			
-			$mcpfiProductList[$i]['prId'] = (string)$products->children('g', true)->$prIDcase;
-			$mcpfiProductList[$i]['prCat'] = (string)$products->children('g', true)->product_type;
-			$mcpfiProductList[$i]['prImage'] = (string)$products->children('g', true)->image_link;
-			$mcpfiProductList[$i]['prGtin'] = (string)$products->children('g', true)->gtin;
-			$mcpfiProductList[$i]['prPrice'] = (string)$products->children('g', true)->price;
-			$mcpfiProductList[$i]['prSalePrice'] = (string)$products->children('g', true)->sale_price;
-			$mcpfiProductList[$i]['prInStock'] = (string)$products->children('g', true)->availability;
-			$mcpfiProductList[$i]['prTitle'] = (string)$products->title;
+			$mcpfiProductList[$i]['prId'] = esc_html($products->children('g', true)->$prIDcase->__toString());
+			$mcpfiProductList[$i]['prCat'] = $products->children('g', true)->product_type->__toString();
+			$mcpfiProductList[$i]['prImage'] = esc_url($products->children('g', true)->image_link->__toString());
+			$mcpfiProductList[$i]['prGtin'] = esc_html($products->children('g', true)->gtin->__toString());
+			$mcpfiProductList[$i]['prPrice'] = esc_html($products->children('g', true)->price->__toString());
+			$mcpfiProductList[$i]['prSalePrice'] = esc_html($products->children('g', true)->sale_price->__toString());
+			$mcpfiProductList[$i]['prInStock'] = esc_attr($products->children('g', true)->availability->__toString());
+			$mcpfiProductList[$i]['prTitle'] = esc_attr($products->title->__toString());
 
 			$i++;;
 		}
@@ -200,11 +202,12 @@
 	//Shortcode for product in frontend
 	function mcpfi_tag_id( $mcpfiTagId ) {
 		$mcpfiTagData = mcpfi_get_product($mcpfiTagId['pid']);
-		$mcpfiUTMsource = get_option( 'mcpfiUTMsource' );
-		$mcpfiUTMmedium = get_option( 'mcpfiUTMmedium' );
-		$mcpfiUTMcampagin = get_option( 'mcpfiUTMcampagin' );
+		$mcpfiUTMsource = get_option('mcpfiUTMsource');
+		$mcpfiUTMmedium = get_option('mcpfiUTMmedium');
+		$mcpfiUTMcampagin = get_option('mcpfiUTMcampagin');
 		$mcpfiColor1 = get_option('mcpfiColor1');
 		$mcpfiImgHeight = get_option('mcpfiImgHeight');
+		$mcpfiImgWidth = get_option('mcpfiImgWidth');
 		
 		$mcpfi_salePrice = $mcpfiTagData['prPrice'];
 		
@@ -216,13 +219,13 @@
 		
 		if (isset($mcpfiTagData)) {
 			return <<<HTML
-			<a href="{$mcpfiTagData['prLink'][0]}?utm_source={$mcpfiUTMsource}&utm_medium={$mcpfiUTMmedium}&utm_campaign={$mcpfiUTMcampagin}&utm_term={$mcpfiTagData['prCat'][0]}&utm_content={$mcpfiTagData['prTitle'][0]}" title="{$mcpfiTagData['prTitle'][0]}" class="mcpfiLink">
-			<span class="mcpfiProduct">
+			<a href="{$mcpfiTagData['prLink']}?utm_source={$mcpfiUTMsource}&utm_medium={$mcpfiUTMmedium}&utm_campaign={$mcpfiUTMcampagin}&utm_term={$mcpfiTagData['prCat']}&utm_content={$mcpfiTagData['prTitle']}" title="{$mcpfiTagData['prTitle']}" class="mcpfiLink">
+			<span class="mcpfiProduct" style="width: {$mcpfiImgWidth}px">
 			<span class="mcpfiPrTitle">
-			<span class="prTitle">{$mcpfiTagData['prTitle'][0]}</span>
+			<span class="prTitle">{$mcpfiTagData['prTitle']}</span>
 			</span>
 			<span class="mcpfiImageContainer">
-			<img src="{$mcpfiTagData['prImage'][0]}" class="mcpfiProductImg" alt="{$mcpfiTagData['prTitle'][0]}" style="height: {$mcpfiImgHeight}px" />
+			<img src="{$mcpfiTagData['prImage']}" class="mcpfiProductImg" alt="{$mcpfiTagData['prTitle']}" style="height: {$mcpfiImgHeight}px" />
 			</span>
 			<span class="mcpfiPrice" style="background: {$mcpfiColor1}">{$mcpfi_salePrice}</span>
 			</span>
@@ -235,7 +238,7 @@ HTML;
 	//Product preview and shortcode copy box
 	if(isset($_POST['product']) && !empty($_POST['product'])) {
 	
-		$product = $_POST['product'];
+		$product = sanitize_text_field($_POST['product']);
 		$mcpfi_product = mcpfi_get_product($product);
 		$mcpfiColor1 = get_option('mcpfiColor1');
 		$mcpfiImgHeight = get_option('mcpfiImgHeight');
@@ -246,13 +249,14 @@ HTML;
 			} else {
 			$mcpfi_salePrice = $mcpfi_product['prPrice'];
 		}
+
 		echo <<<HTML
 		<span class="mcpfiProduct" style="width: 250px;">
 		<span class="mcpfiPrTitle mcpfiprev">
-		<span class="prTitle">{$mcpfi_product['prTitle'][0]}</span>
+		<span class="prTitle">{$mcpfi_product['prTitle']}</span>
 		</span>
-		<a href="{$mcpfi_product['prLink'][0]}" title="{$mcpfi_product['prTitle'][0]}">
-		<img src="{$mcpfi_product['prImage'][0]}" class="mcpfiProductImg" alt="{$mcpfi_product['prTitle'][0]}" style="height: {$mcpfiImgHeight}px" />
+		<a href="{$mcpfi_product['prLink']}" title="{$mcpfi_product['prTitle']}">
+		<img src="{$mcpfi_product['prImage']}" class="mcpfiProductImg" alt="{$mcpfi_product['prTitle']}" style="height: {$mcpfiImgHeight}px" />
 		</a>
 		<span class="mcpfiPrice mcpfiprev" style="background: {$mcpfiColor1}">{$mcpfi_salePrice}</span>
 		</div>
@@ -266,7 +270,8 @@ HTML;
 	
 	//Print product list from given category
 	if(isset($_POST['categorysel']) && !empty($_POST['categorysel'])) {
-		$categorysel = $_POST['categorysel'];
+		$categorysel = sanitize_text_field($_POST['categorysel']);
+		print_r($categorysel);
 		foreach((mcpfi_get_products_from_category($categorysel)) as $product) {
 			echo  '<option value="'.$product['prId'].'">'.$product['prTitle']."</option>\n";	
 		}
@@ -274,6 +279,7 @@ HTML;
 	}
 	
 	//Settings page in backend
-	function mcpfi_settings_page(){ ?> 
-	<?php include( MCPFI_PLUGIN_DIR . 'mcpfi_settings_page.php'); ?> 
-<?php } ?>
+	function mcpfi_settings_page(){
+		require_once( MCPFI_PLUGIN_DIR . 'mcpfi_settings_page.php');
+ } 
+ ?>
