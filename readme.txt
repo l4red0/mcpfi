@@ -3,7 +3,7 @@ Contributors: lsoltys
 Tags: XML, Product feed, Google Merchant Center, Google Shopping, e-commerce, RSS
 Requires at least: 4.1
 Tested up to: 4.8.1
-Stable tag: 1.1
+Stable tag: 1.15
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,7 +37,7 @@ Your feed is copied locally to your plugin directory. With "cache lifespan" you 
 Plugin uses <g:id> parameter from feed to generate product specific shortcode. Changing feed url will also change database for products IDs therefore break shortcodes.
 
 == Screenshots ==
-1. png1.png
+1. mcpfi1.png
 
 == Changelog ==
 
@@ -50,3 +50,11 @@ Plugin uses <g:id> parameter from feed to generate product specific shortcode. C
 * Fixed: removed global styles in favor to inline
 * Fixed: some CSS rendering issues
 * Fixed: better html markup for product boxes
+
+= 0.1.15 =
+* Added: setting for card width
+* Added: additional field validation
+* Added: additional WP related, security check
+* Fixed: input validation sanitization for backend settings
+* Fixed: escaping data from xml
+* Fixed: minor layout fixes for settings page
