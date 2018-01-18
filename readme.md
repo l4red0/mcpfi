@@ -38,19 +38,19 @@ Feed must be RSS 2.0 and meet requirements described [here](https://support.goog
 ## Changelog
 
 * 1.0
-Initial release
+ * Initial release
 
 * 1.1
-Added: option for changing image height
-Added: better product id handling
-Fixed: removed global styles in favor to inline
-Fixed: some CSS rendering issues
-Fixed: better html markup for product boxes
+ * Added: option for changing image height
+ * Added: better product id handling
+ * Fixed: removed global styles in favor to inline
+ * Fixed: some CSS rendering issues
+ * Fixed: better html markup for product boxes
 
 * 1.15
-Added: setting for card width
-Added: additional field validation
-Added: additional WP related, security check
-Fixed: input validation sanitization for backend settings
-Fixed: escaping data from xml
-Fixed: minor layout fixes for settings page
+ * Added: setting for card width
+ * Added: additional field validation
+ * Added: additional WP related, security check
+ * Fixed: input validation sanitization for backend settings
+ * Fixed: escaping data from xml
+ * Fixed: minor layout fixes for settings page
