@@ -5,7 +5,7 @@
 		Description: Fetch and display product cards from Google Merchant Center XML feed on your wordpress site.
 		Author: Leszek Sołtys
 		Author URI: http://soltys.biz
-		Version: 1.1
+		Version: 1.15
 		Text Domain: mcpfi
 		Domain Path: ./languages
 		License: GPLv3
@@ -27,6 +27,7 @@
 	add_option( "mcpfiUTMsource", $mcpfiHomeUrl, "", 'yes' );
 	add_option( "mcpfiUTMmedium", "banner", "", 'yes' );
 	add_option( "mcpfiUTMcampagin", "mcpfi", "", 'yes' );
+	add_option( "mcpfiUTM", "0", "", 'yes' );
 	add_option( "mcpfiColor1", "#00a0d2", "", 'yes' );
 	add_option( "mcpfiImgHeight", "130", "", 'yes' );
 	add_option( "mcpfiImgWidth", "150", "", 'yes' );
@@ -117,8 +118,7 @@
 		foreach($xml->children()->channel->item as $product) {
 		
 		(isset($product->children('g', true)->id) ? $prIDcase = 'id' : $prIDcase = 'ID');
-		
-			//$product .= esc_attr($product);
+
 			if ($product->children('g', true)->$prIDcase == $productId) {
 				$mcpfiSingleProduct['prId'] = esc_attr($product->children('g', true)->$prIDcase->__toString()); 
 				$mcpfiSingleProduct['prTitle'] = esc_attr($product->title->__toString());
@@ -202,9 +202,10 @@
 	//Shortcode for product in frontend
 	function mcpfi_tag_id( $mcpfiTagId ) {
 		$mcpfiTagData = mcpfi_get_product($mcpfiTagId['pid']);
-		$mcpfiUTMsource = get_option('mcpfiUTMsource');
-		$mcpfiUTMmedium = get_option('mcpfiUTMmedium');
-		$mcpfiUTMcampagin = get_option('mcpfiUTMcampagin');
+		$mcpfiUTMsource = urlencode(parse_url(get_option('mcpfiUTMsource'), PHP_URL_HOST));
+		$mcpfiUTMmedium = urlencode(get_option('mcpfiUTMmedium'));
+		$mcpfiUTMcampagin = urlencode(get_option('mcpfiUTMcampagin'));
+		$mcpfiUTM = get_option('mcpfiUTM');
 		$mcpfiColor1 = get_option('mcpfiColor1');
 		$mcpfiImgHeight = get_option('mcpfiImgHeight');
 		$mcpfiImgWidth = get_option('mcpfiImgWidth');
@@ -217,9 +218,16 @@
 			$mcpfi_salePrice = $mcpfiTagData['prPrice'];
 		}
 		
+		//Check if UTM is on and construct link
+		if ($mcpfiUTM != 0) {
+			$mcpfiUTMlink = "<a href=".$mcpfiTagData['prLink']."?utm_source=".$mcpfiUTMsource."&utm_medium=".$mcpfiUTMmedium."&utm_campaign=".$mcpfiUTMcampagin."&utm_term=".urlencode($mcpfiTagData['prCat'])."&utm_content=".urlencode($mcpfiTagData['prTitle'])." title='".urlencode($mcpfiTagData['prTitle'])."' class='mcpfiLink'>";
+			} else {
+			$mcpfiUTMlink = "<a href=".$mcpfiTagData['prLink'].">";
+		}
+		
 		if (isset($mcpfiTagData)) {
 			return <<<HTML
-			<a href="{$mcpfiTagData['prLink']}?utm_source={$mcpfiUTMsource}&utm_medium={$mcpfiUTMmedium}&utm_campaign={$mcpfiUTMcampagin}&utm_term={$mcpfiTagData['prCat']}&utm_content={$mcpfiTagData['prTitle']}" title="{$mcpfiTagData['prTitle']}" class="mcpfiLink">
+			{$mcpfiUTMlink}
 			<span class="mcpfiProduct" style="width: {$mcpfiImgWidth}px">
 			<span class="mcpfiPrTitle">
 			<span class="prTitle">{$mcpfiTagData['prTitle']}</span>
