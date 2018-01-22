@@ -13,9 +13,9 @@ Feed structure and specification are explained in [Google Merchant Center Help](
 
 No. This plugin is only Google Shopping feed specific.
 
-##### How can I change look od product cards?
+##### How can I change look of product cards?
 
-Currently you can change price background color of all cards, by using color picker in "Box Color" option on settings page.
+Currently you can change price background color of all cards, by using color picker in "Price background color" option on settings page. You can control the size of the cards in two ways. First by setting height of the product image and second, by changing witdh of cards. Both values are in pixels.
 
 ##### Is there any way to add UTM parameters to product url?
 
@@ -51,6 +51,8 @@ Feed must be RSS 2.0 and meet requirements described [here](https://support.goog
    * Added: setting for card width
    * Added: additional field validation
    * Added: additional WP related, security check
+   * Added: option to disable UTM
    * Fixed: input validation sanitization for backend settings
+   * Fixed: UTM url sanitization
    * Fixed: escaping data from xml
    * Fixed: minor layout fixes for settings page
