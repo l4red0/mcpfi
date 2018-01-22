@@ -42,6 +42,7 @@
 	if( isset( $_POST['mcpfiImgWidth'] ) ) {
 		update_option( "mcpfiImgWidth", intval($_POST['mcpfiImgWidth']));
 	}
+		update_option( "mcpfiUTM", intval($_POST['mcpfiUTM']));
 	
 	
 	$mcpfiItemCat = get_option('mcpfiItemCat');
@@ -99,7 +100,14 @@
 					}
 				});
 			});
-			
+
+				$('#mcpfiUTM').on('click',function () {
+					if ($('#mcpfiUTM').is(':checked')) {
+					$('tr.utmFieldSettings input').prop('disabled', false);
+						} else {
+					$('tr.utmFieldSettings input').prop('disabled', true); 
+					}
+				});
 			
 			$(".categorySelect").val("<?php echo $mcpfiItemCat; ?>");
 			$(".accessorySelect").val("<?php echo $mcpfiItemId; ?>");
@@ -198,20 +206,27 @@
 					<hr />
 				</td>
 			</tr>
-			<!--UTM source-->
+			
+			<!--Enable/disable UTM-->
 			<tr valign="top">
+				<th scope="row"><?php _e("UTM enabled:", "mcpfi"); ?></th>
+				<td><input type="checkbox" name="mcpfiUTM" id="mcpfiUTM" value="1" <?php checked( '1', get_option( 'mcpfiUTM' )); ?> />
+				</td>
+			</tr>
+			<!--UTM source-->
+			<tr valign="top" class="utmFieldSettings">
 				<th scope="row"><?php _e("UTM source:", "mcpfi"); ?></th>
-				<td><input type="text" style="width: 210px" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>"/></td>
+				<td><input type="text" style="width: 210px" class="mcpfiUTMsource" name="mcpfiUTMsource" value="<?php echo get_option( 'mcpfiUTMsource' ); ?>" <?php disabled( '0', get_option( 'mcpfiUTM' )); ?> /></td>
 			</tr>
 			<!--UTM medium-->
-			<tr valign="top">
+			<tr valign="top" class="utmFieldSettings">
 				<th scope="row"><?php _e("UTM medium:", "mcpfi"); ?></th>
-				<td><input type="text" style="width: 210px" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>"/></td>
+				<td><input type="text" style="width: 210px" class="mcpfiUTMmedium" name="mcpfiUTMmedium" value="<?php echo get_option( 'mcpfiUTMmedium' ); ?>" <?php disabled( '0', get_option( 'mcpfiUTM' )); ?> /></td>
 			</tr>
 			<!--UTM campagin-->
-			<tr valign="top">
+			<tr valign="top" class="utmFieldSettings">
 				<th scope="row"><?php _e("UTM campagin:", "mcpfi"); ?></th>
-				<td><input type="text" style="width: 210px" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>"/><br />
+				<td><input type="text" style="width: 210px" class="mcpfiUTMcampagin" name="mcpfiUTMcampagin" value="<?php echo get_option( 'mcpfiUTMcampagin' ); ?>" <?php disabled( '0', get_option( 'mcpfiUTM' )); ?> /><br />
 					<label for="mcpfiUTMsource"><small><?php _e("Note: UTM term and content are set automatically.", "mcpfi"); ?></small></label>	
 				</td>
 			</tr>
