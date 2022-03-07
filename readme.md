@@ -1,3 +1,6 @@
+***This project is not maintained and now archived. Please do not use it for production enviroment!***
+
+
 # Merchant Center product feed importer
 
 **Wordpress plugin to fetch and display products from your e-commerce Google Merchant Center XML feed on any wordpress site.**
